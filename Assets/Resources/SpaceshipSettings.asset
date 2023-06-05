@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a0d4194cf1f47eb8bf03ea5fbfe625, type: 3}
   m_Name: SpaceshipSettings
   m_EditorClassIdentifier: 
+  ProjectilePrefab: {fileID: 0}
   MaxHealth: 100
   MaxSpeed: 6
+  Dampening: 1
   Acceleration: 1
   FireDamage: 10
   FireRate: 10
