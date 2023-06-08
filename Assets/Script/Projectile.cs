@@ -2,17 +2,37 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private float damage;
+    public float speed = 1f;
+    public float lifetime = 2f;
+    public float damage = 10;
 
-    public void SetDamage(float damage)
+     public void SetDamage(float value)
     {
-        this.damage = damage;
+        damage = value;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Start()
     {
-        // Handle collision logic here
-        // You can access the collided object using 'collision.gameObject'
-        // Apply damage or any other desired effects using the 'damage' value
+        Destroy(gameObject, lifetime);
+    }
+
+    private void Update()
+    {
+        // Move the projectile forward
+        transform.Translate(Vector3.up * speed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // Check if the projectile collided with an object that has a Health component
+        Health health = other.GetComponent<Health>();
+        if (health != null)
+        {
+            health.TakeDamage(damage);
+        }
+
+        // Destroy the projectile
+        Destroy(gameObject);
     }
 }
+

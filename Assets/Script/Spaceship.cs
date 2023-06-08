@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spaceship : MonoBehaviour
 {
     public SpaceshipSettings SpaceShipSettings;
+    public GameObject projectile;
 
     private float currentSpeed;
     private float currentAcceleration;
@@ -15,7 +16,6 @@ public class Spaceship : MonoBehaviour
 
     private Rigidbody2D rb;
 
-
     void Awake()
     {
         SpaceShipSettings = Resources.Load<SpaceshipSettings>("SpaceshipSettings");
@@ -23,6 +23,7 @@ public class Spaceship : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         currentSpeed = 0f;
         currentAcceleration = SpaceShipSettings.Acceleration;
+        FireRate = Time.time; // Initialize FireRate to current time
     }
 
     void Update()
@@ -30,7 +31,11 @@ public class Spaceship : MonoBehaviour
         // Get input for horizontal movement
         moveInput = Input.GetAxis("Horizontal");
 
-        FireRate = Time.time + SpaceShipSettings.FireRate;
+        // Shooting
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time >= FireRate)
+        {
+            SpaceShipSettings.Shoot(transform);
+        }
     }
 
     void FixedUpdate()
@@ -39,7 +44,7 @@ public class Spaceship : MonoBehaviour
         float targetSpeed = moveInput * SpaceShipSettings.MaxSpeed;
 
         // Accelerate towards the target speed
-        currentSpeed = Mathf.MoveTowards(currentSpeed, MaxSpeed, currentAcceleration * Time.fixedDeltaTime);
+        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, currentAcceleration * Time.fixedDeltaTime);
 
         // Apply lateral movement
         Vector2 movement = new Vector2(currentSpeed, 0f);
@@ -48,19 +53,16 @@ public class Spaceship : MonoBehaviour
         // Apply dampening to gradually slow down when no input is given
         if (moveInput == 0f)
         {
-
-        currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, SpaceShipSettings.Dampening * Time.fixedDeltaTime);
-        MaxSpeed = moveInput * SpaceShipSettings.MaxSpeed;
-        
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, SpaceShipSettings.Dampening * Time.fixedDeltaTime);
+            MaxSpeed = targetSpeed;
         }
     }
-    void Shoot()
+
+    private void Shoot()
     {
-        GameObject projectile = Instantiate(SpaceShipSettings.ProjectilePrefab, transform.position, Quaternion.identity);
-        Projectile projectileComponent = projectile.GetComponent<Projectile>();
-
-        projectileComponent.SetDamage(SpaceShipSettings.FireDamage); // Use FireDamage from SpaceshipSettings
-
-    }    
+        SpaceShipSettings.Shoot(transform);
+    }
 }
+
+
 
