@@ -4,11 +4,16 @@ public class Projectile : MonoBehaviour
 {
     public float speed = 1f;
     public float lifetime = 2f;
-    public float damage = 10;
+    public int damage = 10;
 
      public void SetDamage(float value)
     {
-        damage = value;
+        damage = Mathf.RoundToInt(value);
+    }
+
+    public int TakeDamage()
+    {
+        return damage;
     }
 
     private void Start()
@@ -22,10 +27,10 @@ public class Projectile : MonoBehaviour
         transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collision2D other)
     {
         // Check if the projectile collided with an object that has a Health component
-        Health health = other.GetComponent<Health>();
+        Health health = other.gameObject.GetComponent<Health>();
         if (health != null)
         {
             health.TakeDamage(damage);
@@ -34,5 +39,6 @@ public class Projectile : MonoBehaviour
         // Destroy the projectile
         Destroy(gameObject);
     }
+
 }
 

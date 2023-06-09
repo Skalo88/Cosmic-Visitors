@@ -6,20 +6,31 @@ public class Enemy : MonoBehaviour
     public float moveSpeed = 1f;
     public float moveDistance = 1f;
     public float moveDelay = 1f;
-    public Transform shootPoint;
     public float fireRate = 1f;
-    public GameObject projectilePrefab;
+    public GameObject EnemyProjectile;
 
     private int currentHealth;
     private float moveDirection = 1f;
     private float moveTimer;
     private float fireTimer;
 
+    private Rigidbody2D rb;
+
+
     private void Start()
     {
         currentHealth = maxHealth;
         moveTimer = moveDelay;
         fireTimer = fireRate;
+    }
+
+    private void Awake()
+    {
+        
+        rb = GetComponent<Rigidbody2D>();
+
+        // Disable rotation
+        rb.freezeRotation = true; 
     }
 
     private void Update()
@@ -50,9 +61,8 @@ public class Enemy : MonoBehaviour
         if (fireTimer <= 0f)
         {
             // Instantiate and shoot a projectile
-            GameObject projectile = Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
-            // Set any additional properties of the projectile if needed
-            // ...
+            GameObject projectile = Instantiate(EnemyProjectile, transform.position, Quaternion.identity);
+            
             fireTimer = fireRate; // Reset the fire timer
         }
     }
@@ -69,8 +79,16 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        // Perform any necessary actions when the enemy dies
-        // For example, play death animation, give player points, etc.
         Destroy(gameObject);
+    }
+private void OnTriggerEnter2D(Collider2D other)
+    {
+        // Check if the enemy collides with a projectile
+        Projectile projectile = other.GetComponent<Projectile>();
+        if (projectile != null)
+        {
+            TakeDamage(projectile.TakeDamage());
+            Destroy(projectile.gameObject);
+        }
     }
 }

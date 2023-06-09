@@ -24,8 +24,6 @@ public class Health : MonoBehaviour
 
     private void Die()
     {
-        // Perform any necessary actions when the object dies
-        // For example, play death animation, remove object from the scene, etc.
         Destroy(gameObject);
     }
 }

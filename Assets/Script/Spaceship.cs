@@ -5,7 +5,10 @@ using UnityEngine;
 public class Spaceship : MonoBehaviour
 {
     public SpaceshipSettings SpaceShipSettings;
+    
     public GameObject projectile;
+    
+    private int currentHealth;
 
     private float currentSpeed;
     private float currentAcceleration;
@@ -16,6 +19,8 @@ public class Spaceship : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    
+
     void Awake()
     {
         SpaceShipSettings = Resources.Load<SpaceshipSettings>("SpaceshipSettings");
@@ -23,8 +28,35 @@ public class Spaceship : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         currentSpeed = 0f;
         currentAcceleration = SpaceShipSettings.Acceleration;
-        FireRate = Time.time; // Initialize FireRate to current time
+        
+        // Initialize FireRate to current time
+        FireRate = Time.time;
+        
+        // Disable rotation
+        rb.freezeRotation = true; 
+
     }
+
+    private void Start()
+    {
+        currentHealth = SpaceShipSettings.MaxHealth;
+    }
+
+
+     public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            DestroySpaceship();
+        }
+    }
+
+        private void DestroySpaceship()
+        {
+            Destroy(gameObject);
+        }
 
     void Update()
     {
@@ -57,11 +89,7 @@ public class Spaceship : MonoBehaviour
             MaxSpeed = targetSpeed;
         }
     }
-
-    private void Shoot()
-    {
-        SpaceShipSettings.Shoot(transform);
-    }
+    
 }
 
 

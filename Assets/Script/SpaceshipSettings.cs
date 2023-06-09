@@ -19,18 +19,22 @@ public class SpaceshipSettings : ScriptableObject
     {
         // Instantiate projectile
         GameObject projectile = Instantiate(ProjectilePrefab, shooter.position, shooter.rotation);
-        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
         Projectile projectileComponent = projectile.GetComponent<Projectile>();
+        
 
         // Set damage value
         projectileComponent.SetDamage(FireDamage);
 
         // Apply velocity to the projectile
+        Rigidbody2D projectileRb = projectile.GetComponent<Rigidbody2D>();
         projectileRb.velocity = shooter.up * ProjectileSpeed;
+        
     }
+
 
     public void ApplyDamageMultiplier(float multiplier)
     {
         DamageMultiplier = multiplier;
     }
+    
 }
