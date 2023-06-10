@@ -23,7 +23,7 @@ public class UIController : MonoBehaviour
 
     public GameObject PauseGamePanel;
 
-    public Button quitButton; // Reference to the resume button
+    public Button QuitButton; // Reference to the quit button
     public Button resetButton; // Reference to the reset button
 
     
@@ -36,7 +36,7 @@ public class UIController : MonoBehaviour
         ShowStartGame();
 
         // Add click event listeners to the buttons
-        quitButton.onClick.AddListener(QuitGame);
+        QuitButton.onClick.AddListener(QuitGame);
         resetButton.onClick.AddListener(ResetGame);
     }
 
@@ -117,6 +117,8 @@ public class UIController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+        UnityEditor.EditorApplication.isPlaying = false;
+
     }
 
 
