@@ -7,15 +7,16 @@ public class Enemy : MonoBehaviour
     public float moveDistance = 1f;
     public float moveDelay = 1f;
     public float fireRate = 1f;
-    public GameObject EnemyProjectile;
+    public GameObject enemyProjectile;
+
+    public float minX = -5f;  // Minimum X coordinate for enemy movement
+    public float maxX = 5f;  // Maximum X coordinate for enemy movement
 
     private int currentHealth;
     private float moveDirection = 1f;
     private float moveTimer;
     private float fireTimer;
-
     private Rigidbody2D rb;
-
 
     private void Start()
     {
@@ -26,11 +27,10 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        
         rb = GetComponent<Rigidbody2D>();
 
         // Disable rotation
-        rb.freezeRotation = true; 
+        rb.freezeRotation = true;
     }
 
     private void Update()
@@ -41,8 +41,13 @@ public class Enemy : MonoBehaviour
 
     private void Move()
     {
-        // Move horizontally based on moveDirection
+        // Calculate the new position based on the moveDirection and moveSpeed
         Vector3 newPosition = transform.position + new Vector3(moveSpeed * moveDirection * Time.deltaTime, 0f, 0f);
+
+        // Clamp the X coordinate within the specified range
+        newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
+
+        // Update the enemy's position
         transform.position = newPosition;
 
         // Check if the enemy needs to change direction
@@ -61,8 +66,8 @@ public class Enemy : MonoBehaviour
         if (fireTimer <= 0f)
         {
             // Instantiate and shoot a projectile
-            GameObject projectile = Instantiate(EnemyProjectile, transform.position, Quaternion.identity);
-            
+            Instantiate(enemyProjectile, transform.position, Quaternion.identity);
+
             fireTimer = fireRate; // Reset the fire timer
         }
     }
@@ -81,7 +86,8 @@ public class Enemy : MonoBehaviour
     {
         Destroy(gameObject);
     }
-private void OnTriggerEnter2D(Collider2D other)
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
         // Check if the enemy collides with a projectile
         Projectile projectile = other.GetComponent<Projectile>();

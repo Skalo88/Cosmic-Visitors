@@ -9,7 +9,13 @@ public class UIController : MonoBehaviour
 {
     public HealthController healthController;
 
+    bool isPaused;
+
+    
+    public Spaceship spaceship;
+
     public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI PauseText;
 
     public GameObject GameOverPanel;
 
@@ -17,12 +23,21 @@ public class UIController : MonoBehaviour
 
     public GameObject PauseGamePanel;
 
+    public Button quitButton; // Reference to the resume button
+    public Button resetButton; // Reference to the reset button
+
+    
+
 
     private void Start() 
     {
         HideGameOver();
         HidePausePanel();
         ShowStartGame();
+
+        // Add click event listeners to the buttons
+        quitButton.onClick.AddListener(QuitGame);
+        resetButton.onClick.AddListener(ResetGame);
     }
 
     void Update()
@@ -31,6 +46,27 @@ public class UIController : MonoBehaviour
         {
             ShowGameOver();
         }
+
+    if (Input.GetKeyDown(KeyCode.Escape))
+    {
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+		PauseGamePanel.SetActive(isPaused);
+
+        if (isPaused) 
+        { 
+                PauseText.text = "Game Paused"; // Update the pause message text
+                return;
+        }
+           
+        else
+            {
+                PauseText.text = ""; // Clear the pause message text when unpausing
+            }
+        
+
+    }
+
     }
 
     public void UpdateScoreText(int _value)
@@ -67,6 +103,21 @@ public class UIController : MonoBehaviour
     {
         PauseGamePanel.SetActive(false);
     } 
+
+
+    // Button click event handler for resetting the game
+    public void ResetGame()
+    {
+        // Add your reset logic here
+        // For example, you can reload the current scene or reset game variables
+
+        // Call functions to reset your game here
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 
 
 
