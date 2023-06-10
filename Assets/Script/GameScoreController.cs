@@ -19,9 +19,7 @@ public class GameScoreController : MonoBehaviour
 
     public void  Awake()
     {
-   
-       // FindObjectOfType<GameScoreController>().UpdateLives(Lives);
-     //UIController.UpdateLivesIcons(Lives);
+
     }
 
 
@@ -63,20 +61,4 @@ public class GameScoreController : MonoBehaviour
         PauseGamePanel.SetActive(false);
     } 
 
-  /* 
-  
-  
-    public void UpdateLives(int _value)
-    {
-        Lives = _value;
-
-    }
-     public void UpdateLives(int _value) 
-    {
-       for (int i = 0; i < LifeIcons.Count; i++)
-       {
-            LifeIcons[i].SetActive(i < _value);
-       } 
-    }
-*/
 }

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: SpaceshipSettings
   m_EditorClassIdentifier: 
   ProjectilePrefab: {fileID: 2033989384991331159, guid: a20df9b745f114e29a8fec5caf0f20f7, type: 3}
-  MaxHealth: 150
+  MaxHealth: 50
+  MaxLives: 3
   MaxSpeed: 5
   Dampening: 100
   Acceleration: 2

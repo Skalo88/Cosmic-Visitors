@@ -5,7 +5,7 @@ using UnityEngine;
 public class Spaceship : MonoBehaviour
 {
     public SpaceshipSettings SpaceShipSettings;
-    private UIController uiController;
+    private UIController UIController;
 
     
     public GameObject projectile;
@@ -55,22 +55,13 @@ public class Spaceship : MonoBehaviour
         currentHealth = SpaceShipSettings.MaxHealth;
         
         StartScreenSwap();
-/*
-        uiController = FindObjectOfType<UIController>();
-        FindObjectOfType<GameScoreController>().UpdateLives(currentHealth);
-        uiController.UpdateLivesIcons(currentHealth);
-*/
-           
-        }
+    
+    }
     
     void Update()
     {
-
         ScreenWrap();
-        /*
-        uiController.UpdateLivesIcons(currentHealth);
-        */
-
+       
         // Get input for horizontal movement
         moveInput = Input.GetAxis("Horizontal");
 
