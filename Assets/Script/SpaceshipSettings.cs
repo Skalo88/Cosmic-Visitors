@@ -6,6 +6,9 @@ public class SpaceshipSettings : ScriptableObject
     public GameObject ProjectilePrefab;
 
     public int MaxHealth = 100;
+
+    public int MaxLives = 3;
+
     public float MaxSpeed = 6f;
     public float Dampening = 1f;
     public float Acceleration = 1f;

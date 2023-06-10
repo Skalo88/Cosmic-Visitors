@@ -5,10 +5,13 @@ using UnityEngine;
 public class Spaceship : MonoBehaviour
 {
     public SpaceshipSettings SpaceShipSettings;
+    private UIController uiController;
+
     
     public GameObject projectile;
     
     private int currentHealth;
+
 
     private float currentSpeed;
     private float currentAcceleration;
@@ -23,16 +26,17 @@ public class Spaceship : MonoBehaviour
 	Renderer[] renderers;
 	bool isWrappingX = false;
 	bool isWrappingY = false;
-    
-    Transform[] ghosts = new Transform[8];
-	
+
+
 	float screenWidth;
 	float screenHeight;
+    [SerializeField] private HealthController _healthcontroller;
+
+
 
     void Awake()
     {
         SpaceShipSettings = Resources.Load<SpaceshipSettings>("SpaceshipSettings");
-
         rb = GetComponent<Rigidbody2D>();
         currentSpeed = 0f;
         currentAcceleration = SpaceShipSettings.Acceleration;
@@ -43,47 +47,29 @@ public class Spaceship : MonoBehaviour
         // Disable rotation
         rb.freezeRotation = true; 
 
+
     }
 
     private void Start()
     {
         currentHealth = SpaceShipSettings.MaxHealth;
         
-        //  added
-        renderers = GetComponentsInChildren<Renderer>();
-		
-		var cam = Camera.main;
-        
-        var screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
-		var screenTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, transform.position.z));
-		
-		// The width is then equal to difference between the rightmost and leftmost x-coordinates
-		screenWidth = screenTopRight.x - screenBottomLeft.x;
-		// The height, similar to above is the difference between the topmost and the bottom ycoordinates
-		screenHeight = screenTopRight.y - screenBottomLeft.y;
-        // CreateGhostShips();
-
-    }
-
-
-     public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-
-        if (currentHealth <= 0)
-        {
-            DestroySpaceship();
+        StartScreenSwap();
+/*
+        uiController = FindObjectOfType<UIController>();
+        FindObjectOfType<GameScoreController>().UpdateLives(currentHealth);
+        uiController.UpdateLivesIcons(currentHealth);
+*/
+           
         }
-    }
-
-        private void DestroySpaceship()
-        {
-            Destroy(gameObject);
-        }
-
+    
     void Update()
     {
+
         ScreenWrap();
+        /*
+        uiController.UpdateLivesIcons(currentHealth);
+        */
 
         // Get input for horizontal movement
         moveInput = Input.GetAxis("Horizontal");
@@ -114,7 +100,48 @@ public class Spaceship : MonoBehaviour
             MaxSpeed = targetSpeed;
         }
     }
-    	void ScreenWrap()
+    private void StartScreenSwap()
+         {
+        renderers = GetComponentsInChildren<Renderer>();
+		var cam = Camera.main;
+        var screenBottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, transform.position.z));
+		var screenTopRight = cam.ViewportToWorldPoint(new Vector3(1, 1, transform.position.z));
+		// The width is then equal to difference between the rightmost and leftmost x-coordinates
+		screenWidth = screenTopRight.x - screenBottomLeft.x;
+		// The height, similar to above is the difference between the topmost and the bottom ycoordinates
+		screenHeight = screenTopRight.y - screenBottomLeft.y;
+        }
+
+
+   public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        // update healthController
+  
+        if (currentHealth <= 0)
+        {
+            _healthcontroller.playerHealth = _healthcontroller.playerHealth - 1; 
+            _healthcontroller.UpdateHealth(); 
+            if (_healthcontroller.playerHealth <= 0)
+            {
+                DestroySpaceship();
+            }
+            else
+            {
+                currentHealth = SpaceShipSettings.MaxHealth;
+
+            }
+        }
+
+    }
+
+       private void DestroySpaceship()
+       {
+
+            Destroy(gameObject);
+       }
+
+    void ScreenWrap()
 	{	
 		// If all parts of the object are invisible we wrap it around
 		foreach(var renderer in renderers)
@@ -131,43 +158,14 @@ public class Spaceship : MonoBehaviour
 		if(isWrappingX && isWrappingY) {
 			return;
 		}
-		
 		var cam = Camera.main;
 		var newPosition = transform.position;
-		
-		// We need to check whether the object went off screen along the horizontal axis (X),
-		// or along the vertical axis (Y).
-		//
-		// The easiest way to do that is to convert the ships world position to
-		// viewport position and then check.
-		//
-		// Remember that viewport coordinates go from 0 to 1?
-		// To be exact they are in 0-1 range for everything on screen.
-		// If something is off screen, it is going to have
-		// either a negative coordinate (less than 0), or
-		// a coordinate greater than 1
-		//
-		// So, we get the ships viewport position
 		var viewportPosition = cam.WorldToViewportPoint(transform.position);
-		
-		
+	
 		// Wrap it is off screen along the x-axis and is not being wrapped already
 		if (!isWrappingX && (viewportPosition.x > 1 || viewportPosition.x < 0))
 		{
-			// The scene is laid out like a mirror:
-			// Center of the screen is position the camera's position - (0, 0),
-			// Everything to the right is positive,
-			// Everything to the left is negative;
-			// Everything in the top half is positive
-			// Everything in the bottom half is negative
-			// So we simply swap the current position with it's negative one
-			// -- if it was (15, 0), it becomes (-15, 0);
-			// -- if it was (-20, 0), it becomes (20, 0).
 			newPosition.x = -newPosition.x;
-			
-			// If you had a camera that isn't at X = 0 and Y = 0,
-			// you would have to use this instead
-			// newPosition.x = Camera.main.transform.position - newPosition.x;
 			
 			isWrappingX = true;
 		}
@@ -183,9 +181,5 @@ public class Spaceship : MonoBehaviour
 		//Apply new position
 		transform.position = newPosition;
 	}
-
     
 }
-
-
-

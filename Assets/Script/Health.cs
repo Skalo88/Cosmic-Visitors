@@ -15,6 +15,8 @@ public class Health : MonoBehaviour
         // Reduce the current health by the damage amount
         currentHealth -= Mathf.RoundToInt(damage);
 
+
+
         // Check if the health reaches zero or below
         if (currentHealth <= 0)
         {

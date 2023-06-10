@@ -7,63 +7,52 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
-    public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI LivesText;
 
-    public List<GameObject> LifeIcons = new List<GameObject>();
+    public List<GameObject> LivesIcons = new List<GameObject>();
+    
+    public void UpdateLivesIcons(int _value) 
+    {
+       for (int i = LivesIcons.Count -1 ; i >= 0 ; i --)
+       {
+            LivesIcons[i].SetActive(i >= _value);
+       } 
 
-    public GameObject GameOverPanel;
+    }
 
-    public GameObject StartGamePanel;
 
-    public GameObject PauseGamePanel;
+
+
+    public List<GameObject> GetLivesIcons()
+    {
+    return LivesIcons;
+    }
 
     private void Start() 
     {
-        HideGameOver();
-        HidePausePanel();
-        ShowStartGame();
+    // HideGameOver();
+      // HidePausePanel();
+       // ShowStartGame();
     }
 
-    public void UpdateScoreText(int _value)
-    {
-        ScoreText.text = _value.ToString();
-    }
 
-    public void UpdateLives(int _value) 
+    public void UpdateLivesIcons2() 
     {
-       for (int i = LifeIcons.Count - 1; i >= 0; i--)
+        LivesIcons.RemoveAt(LivesIcons.Count - 1); // Remove a life icon
+
+    /*   //LivesIcons.Count =  LivesIcons.Count - 1;
+       for (int i = 0; i < LivesIcons.Count; i++)
        {
-            LifeIcons[i].SetActive(_value >= i);
+            LivesIcons[i].SetActive(i < -1);
        } 
+       */
+
+         if (LivesIcons.Count <= 1)
+        {
+            //GameController.ShowGameOver();
+    
+          }
+
     }
 
-    public void ShowGameOver()
-    {
-        GameOverPanel.SetActive(true);
-    }
-
-    public void HideGameOver()
-    {
-        GameOverPanel.SetActive(false);
-    }
-
-    public void ShowStartGame()
-    {
-        StartGamePanel.SetActive(true);
-    }
-
-    public void HideStartGame()
-    {
-        StartGamePanel.SetActive(false);
-    }
-
-     public void ShowPausePanel()
-    {
-        PauseGamePanel.SetActive(true);
-    }
-
-    public void HidePausePanel()
-    {
-        PauseGamePanel.SetActive(false);
-    } 
 }

@@ -6,6 +6,10 @@ public class EnemyProjectile : MonoBehaviour
     public float lifetime = 2f;
     public int damage = 10;
 
+     public  int EnemyProjectileDamage = 1;
+
+
+
      public void SetDamage(float value)
     {
         damage = Mathf.RoundToInt(value);
@@ -35,6 +39,8 @@ public class EnemyProjectile : MonoBehaviour
         if (spaceship != null)
         {
             spaceship.TakeDamage(damage);
+
+            //detroy the bullet 
             Destroy(gameObject);
         }
     }
